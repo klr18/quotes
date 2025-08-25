@@ -1,0 +1,64 @@
+{% extends 'quotes/base.html' %}
+
+{% block content %}
+
+<h2>{{ title }}</h2>
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Другие выборки
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href="{% url 'rating' 'popular' %}">10 самых популярных</a>
+      <a class="dropdown-item" href="{% url 'rating' 'worst' %}">10 самых худших</a>
+    <a class="dropdown-item" href="{% url 'rating' 'newest' %}">10 самых новых</a>
+      <a class="dropdown-item" href="{% url 'rating' 'oldest' %}">10 самых старых</a>
+    <a class="dropdown-item" href="{% url 'rating' 'frequent' %}">10 самых часто встречающихся</a>
+      <a class="dropdown-item" href="{% url 'rating' 'rare' %}">10 самых редких</a>
+  </div>
+</div>
+
+<ol class="mt-2">
+    {% for q in quotes %}
+    <li>
+        <div class="card">
+          <div class="card-body">
+            <blockquote class="blockquote mb-0">
+              <p>{{ q.quote_text }}</p>
+              <footer class="blockquote-footer">{{ q.source.name }}</footer>
+            </blockquote>
+          </div>
+        </div>
+    </li>
+    {% endfor %}
+</ol>
+
+<div>
+  <canvas id="myChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const ctx = document.getElementById('myChart');
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: [{% for item in quotes_text %}"{{ item }}",{% endfor %}],
+      datasets: [{
+        label: '{{ title_graph }}',
+        data: [{% for item in data_list %}{{ item }},{% endfor %}],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>
+
+{% endblock %}

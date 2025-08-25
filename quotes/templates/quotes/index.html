@@ -1,0 +1,76 @@
+{% extends 'quotes/base.html' %}
+
+{% block content %}
+
+<div class="card">
+  <div class="card-header">
+    Случайная цитата
+  </div>
+  <div class="card-body">
+    <blockquote class="blockquote mb-0">
+      <p>{{ quote.quote_text }}</p>
+      <footer class="blockquote-footer">{{ quote.source.name }}</footer>
+    </blockquote>
+  </div>
+</div>
+
+<div class="mt-1">
+    <button onclick="sendLike({{ quote.id }})" class="btn btn-outline-dark w-25">
+        <span id="likes-{{ quote.id }}">{{ quote.likes }}</span>❤️
+    </button>
+    <button onclick="sendDislike({{ quote.id }})" class="btn btn-outline-dark w-25">
+        <span id="dislikes-{{ quote.id }}">{{ quote.dislikes }}</span>💔
+    </button>
+</div>
+
+<p>Просмотров страницы: {{ views.total_views }}</p>
+
+<script>
+function sendLike(quoteId) {
+    fetch(`/quotes/like/${quoteId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById(`likes-${quoteId}`).textContent = data.likes;
+        document.getElementById(`dislikes-${quoteId}`).textContent = data.dislikes;
+    });
+}
+
+function sendDislike(quoteId) {
+    fetch(`/quotes/dislike/${quoteId}/`, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken'),
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById(`likes-${quoteId}`).textContent = data.likes;
+        document.getElementById(`dislikes-${quoteId}`).textContent = data.dislikes;
+    });
+}
+
+// стандартная функция для CSRF-токена (Django)
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+
+{% endblock %}

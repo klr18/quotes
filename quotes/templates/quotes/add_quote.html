@@ -1,0 +1,12 @@
+{% extends 'quotes/base.html' %}
+
+{% block content %}
+
+<form method="POST" class="post-form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-success">Добавить</button>
+    <a class="btn btn-outline-primary" role="button" href="{% url 'add_source' %}">Тут нет моего источника :(</a>
+</form>
+
+{% endblock %}
