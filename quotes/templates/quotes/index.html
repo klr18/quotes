@@ -27,7 +27,7 @@
 
 <script>
 function sendLike(quoteId) {
-    fetch(`/quotes/like/${quoteId}/`, {
+    fetch(`/like/${quoteId}/`, {
         method: 'POST',
         headers: {
             'X-CSRFToken': getCookie('csrftoken'),
@@ -42,7 +42,7 @@ function sendLike(quoteId) {
 }
 
 function sendDislike(quoteId) {
-    fetch(`/quotes/dislike/${quoteId}/`, {
+    fetch(`/dislike/${quoteId}/`, {
         method: 'POST',
         headers: {
             'X-CSRFToken': getCookie('csrftoken'),
